@@ -53,11 +53,6 @@ const userSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 14,
   },
-  sendNotification: {
-    type: Boolean,
-    default: true,
-    required: true,
-  },
   role: roleSchema,
   isEmailVerified: {
     type: Boolean,
@@ -145,10 +140,6 @@ function validateUser(user) {
         "number.min": `MINIMUM_10_CHARS`,
         "number.max": `MAXIMUM_14_CHARS`,
       }),
-    sendNotification: Joi.boolean().default(true).required().messages({
-      "any.required": `REQUIRED_FIELD`,
-      "boolean.base": `INVALID_NOTIFICATION`,
-    }),
     isEmailVerified: Joi.boolean().default(true).messages({
       "any.required": `REQUIRED_FIELD`,
       "boolean.base": `NO_VERIFICATION`,

@@ -3,7 +3,7 @@ const router = new express.Router();
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 require("dotenv").config(); //
-const { User } = require("../models/user");
+const { User } = require("../../startup/models/user");
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);

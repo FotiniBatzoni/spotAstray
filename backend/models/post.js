@@ -67,11 +67,10 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    deletedAt: {
-      type: Date,
-    },
+
     isActive: {
       type: Boolean,
+      default: true,
     },
     postType: postTypeSchema,
     breed: breedSchema,

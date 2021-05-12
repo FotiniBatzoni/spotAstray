@@ -120,14 +120,13 @@ router.delete("/:postId", [auth], async (req, res) => {
     _id: req.params.postId,
   });
 
-  if (!post) {
+  if (!post || post.isActive === false) {
     return res.status(404).send({ message: "POST_NOT_FOUND" });
   }
 
   post = await Post.findByIdAndUpdate(
     req.params.postId,
     {
-      deletedAt: Date.now(),
       isActive: false,
       user: req.user._id,
     },

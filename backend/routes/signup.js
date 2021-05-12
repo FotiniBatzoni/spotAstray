@@ -21,7 +21,6 @@ router.post("/", async (req, res) => {
     postalcode: req.body.postalcode,
     location: req.body.location,
     telephone: req.body.telephone,
-    sendNotification: req.body.sendNotification,
   };
 
   let user = await User.findOne({ email: req.body.email });
