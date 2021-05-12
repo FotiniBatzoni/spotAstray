@@ -28,10 +28,10 @@ const Role = mongoose.model("Role", roleSchema);
 function validateRole(role) {
   const schema = Joi.object({
     priority: Joi.number().integer().min(0).unique().messages({
-      "any.number": "MUST_BE_NUMBER",
-      "number.integer": "MUST_BE_INTEGER",
-      "number.min": "MINIMUM_0",
-      "any.unique": "MUST_BE_UNIQUE",
+      "any.number": `MUST_BE_NUMBER`,
+      "number.integer": `MUST_BE_INTEGER`,
+      "number.min": `MINIMUM_0`,
+      "any.unique": `MUST_BE_UNIQUE`,
     }),
     title: Joi.string()
       .regex(/[$\(\)<>]/, { invert: true })
@@ -40,11 +40,11 @@ function validateRole(role) {
       .required()
       .unique()
       .messages({
-        "string.pattern.invert.base": "ILLEGAL_CHAR_TITLE",
-        "string.min": "MINIMUN_2_CHARS",
-        "string.max": "MAXIMUM_50_CHARS",
-        "any.unique": "MUST_BE_UNIQUE",
-        "any.required": "REQUIRED_FIELD",
+        "string.pattern.invert.base": `ILLEGAL_CHAR_TITLE`,
+        "string.min": `MINIMUN_2_CHARS`,
+        "string.max": `MAXIMUM_50_CHARS`,
+        "any.unique": `MUST_BE_UNIQUE`,
+        "any.required": `REQUIRED_FIELD`,
       }),
     titleEn: Joi.string()
       .regex(/[$\(\)<>]/, { invert: true })
@@ -53,11 +53,11 @@ function validateRole(role) {
       .required()
       .unique()
       .messages({
-        "string.pattern.invert.base": "ILLEGAL_CHAR_TITLE",
-        "string.min": "MINIMUN_2_CHARS",
-        "string.max": "MAXIMUM_50_CHARS",
-        "any.unique": "MUST_BE_UNIQUE",
-        "any.required": "REQUIRED_FIELD",
+        "string.pattern.invert.base": `ILLEGAL_CHAR_TITLE`,
+        "string.min": `MINIMUN_2_CHARS`,
+        "string.max": `MAXIMUM_50_CHARS`,
+        "any.unique": `MUST_BE_UNIQUE`,
+        "any.required": `REQUIRED_FIELD`,
       }),
   });
   return schema.validate(role);

@@ -47,12 +47,6 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 5,
   },
-  location: {
-    type: String,
-    default: null,
-    minlength: 2,
-    maxlength: 50,
-  },
   telephone: {
     type: String,
     default: null,
@@ -69,6 +63,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  posts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -92,11 +92,11 @@ function validateUser(user) {
       .min(2)
       .max(50)
       .messages({
-        "string.pattern.invert.base": "FULLNAME_ILLEGAL_CHAR",
-        "any.required": "INVALID_FULLNAME",
-        "string.empty": "FULLNAME_MUST_NOT_BE_EMPTY",
-        "string.min": "FULLNAME_MINIMUN_2_CHARS",
-        "string.max": "FULLNAME_MAXIMUM_50_CHARS",
+        "string.pattern.invert.base": `FULLNAME_ILLEGAL_CHAR`,
+        "any.required": `INVALID_FULLNAME`,
+        "string.empty": `FULLNAME_MUST_NOT_BE_EMPTY`,
+        "string.min": `FULLNAME_MINIMUN_2_CHARS`,
+        "string.max": `FULLNAME_MAXIMUM_50_CHARS`,
       }),
     email: Joi.string()
       .email()
@@ -105,13 +105,13 @@ function validateUser(user) {
       .min(5)
       .max(50)
       .messages({
-        "string.pattern.invert.base": "EMAIL_ILLEGAL_CHAR",
-        "string.empty": "EMAIL_MUST_NOT_BE_EMPTY",
-        "string.email": "INVALID_EMAIL",
-        "any.required": "INVALID_EMAIL",
-        "any.unique": "INVALID_EMAIL",
-        "string.min": "INVALID_EMAIL",
-        "string.max": "INVALID_EMAIL",
+        "string.pattern.invert.base": `EMAIL_ILLEGAL_CHAR`,
+        "string.empty": `EMAIL_MUST_NOT_BE_EMPTY`,
+        "string.email": `INVALID_EMAIL`,
+        "any.required": `INVALID_EMAIL`,
+        "any.unique": `INVALID_EMAIL`,
+        "string.min": `INVALID_EMAIL`,
+        "string.max": `INVALID_EMAIL`,
       }),
     password: Joi.string()
       .regex(/[$\(\)<>]/, { invert: true })
@@ -119,11 +119,11 @@ function validateUser(user) {
       .min(6)
       .max(255)
       .messages({
-        "string.pattern.invert.base": "ILLEGAL_CHAR_PASSWORD",
-        "string.empty": "PASSWORD_MUST_NOT_BE_EMPTY",
-        "any.required": "PASSWORD_REQUIRED",
-        "string.min": "MINIMUM_6_CHARS",
-        "string.max": "MAXIMUM_255_CHARS",
+        "string.pattern.invert.base": `ILLEGAL_CHAR_PASSWORD`,
+        "string.empty": `PASSWORD_MUST_NOT_BE_EMPTY`,
+        "any.required": `PASSWORD_REQUIRED`,
+        "string.min": `MINIMUM_6_CHARS`,
+        "string.max": `MAXIMUM_255_CHARS`,
       }),
     postalcode: Joi.string()
       .allow("", null)
@@ -131,20 +131,9 @@ function validateUser(user) {
       .min(5)
       .max(6)
       .messages({
-        "any.number": "MUST_BE_NUMBER",
-        "number.min": "MINIMUM_5_CHARS",
-        "number.max": "MAXIMUM_5_CHARS",
-      }),
-    location: Joi.string()
-      .regex(/[$\(\)<>]/, { invert: true })
-      .allow("", null)
-      .default(null)
-      .min(2)
-      .max(50)
-      .messages({
-        "string.pattern.invert.base": "ILLEGAL_CHAR_LOCATION",
-        "string.min": "MINIMUM_2_CHARS",
-        "string.max": "MAXIMUM_50_CHARS",
+        "any.number": `MUST_BE_NUMBER`,
+        "number.min": `MINIMUM_5_CHARS`,
+        "number.max": `MAXIMUM_5_CHARS`,
       }),
     telephone: Joi.string()
       .min(10)
@@ -152,17 +141,17 @@ function validateUser(user) {
       .default(null)
       .allow("", null)
       .messages({
-        "any.number": "MUST_BE_NUMBER",
-        "number.min": "MINIMUM_10_CHARS",
-        "number.max": "MAXIMUM_14_CHARS",
+        "any.number": `MUST_BE_NUMBER`,
+        "number.min": `MINIMUM_10_CHARS`,
+        "number.max": `MAXIMUM_14_CHARS`,
       }),
     sendNotification: Joi.boolean().default(true).required().messages({
-      "any.required": "REQUIRED_FIELD",
-      "boolean.base": "INVALID_NOTIFICATION",
+      "any.required": `REQUIRED_FIELD`,
+      "boolean.base": `INVALID_NOTIFICATION`,
     }),
     isEmailVerified: Joi.boolean().default(true).messages({
-      "any.required": "REQUIRED_FIELD",
-      "boolean.base": "NO_VERIFICATION",
+      "any.required": `REQUIRED_FIELD`,
+      "boolean.base": `NO_VERIFICATION`,
     }),
   });
   return schema.validate(user);

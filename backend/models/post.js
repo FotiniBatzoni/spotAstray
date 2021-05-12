@@ -29,18 +29,16 @@ const postSchema = new mongoose.Schema(
     images: [
       {
         type: String,
-        required: true,
+        //required: true,
       },
     ],
-    coordinates: {
-      latitude: {
-        type: Number,
-        required: true,
-      },
-      longtitude: {
-        type: Number,
-        required: true,
-      },
+    latitude: {
+      type: Number,
+      required: true,
+    },
+    longtitude: {
+      type: Number,
+      required: true,
     },
     petSex: {
       type: String,
@@ -56,9 +54,9 @@ const postSchema = new mongoose.Schema(
       type: String,
       enum: [
         "X-Small (1-5 kg)",
-        "Small (5-15 Kg)",
+        "Small (5-15 kg)",
         "Medium (15-25 kg)",
-        "Large (>25 Kg)",
+        "Large (>25 kg)",
       ],
       required: true,
     },
@@ -71,44 +69,53 @@ const postSchema = new mongoose.Schema(
     },
     deletedAt: {
       type: Date,
-      default: Date.now,
+    },
+    isActive: {
+      type: Boolean,
     },
     postType: postTypeSchema,
     breed: breedSchema,
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   },
-
   { timestamps: true }
 );
 
 const Post = mongoose.model("Post", postSchema);
 
 function validatePost(post) {
-  const schema = Joi.ObjectId({
+  const schema = Joi.object({
     content: Joi.string()
       .regex(/[$\(\)<>]/, { invert: true })
       .max(63200)
       .messages({
         "string.pattern.invert.base": "CONTENT_ILLEGAL_CHAR",
-        "any.required": "CONTENT_IS_REQUIRED",
-        "string.empty": "CONTENT_MUST_NOT_BE_EMPTY",
-        "string.max": "CONTENT_MAXIMUM_63200_CHARS",
+        "any.required": `CONTENT_IS_REQUIRED`,
+        "string.empty": `CONTENT_IS_REQUIRED`,
+        "string.max": `CONTENT_MAXIMUM_63200_CHARS`,
       }),
-    image: Joi.string()
+    images: Joi.string()
       .regex(/[$\(\)<>]/, { invert: true })
-      .required()
+      //.required()
       .allow("", null)
       .messages({
-        "string.pattern.invert.base": "CONTENT_ILLEGAL_CHAR",
-        "any.required": "CONTENT_IS_REQUIRED",
-        "string.empty": "CONTENT_MUST_NOT_BE_EMPTY",
+        "string.pattern.invert.base": `CONTENT_ILLEGAL_CHAR`,
+        //"any.required": `IMAGE_IS_REQUIRED`,
+        "string.empty": `CONTENT_MUST_NOT_BE_EMPTY`,
       }),
     latitude: Joi.number().required().messages({
-      "any.required": "COORDINATES_ARE_REQUIRED",
-      "number.empty": "COORDINATES_MUST_NOT_BE_EMPTY",
+      "any.required": `COORDINATES_ARE_REQUIRED`,
+      "number.base": `COORDINATES_MUST_BE_NUMERIC`,
+      "number.empty": `COORDINATES_MUST_NOT_BE_EMPTY`,
     }),
     longtitude: Joi.number().required().messages({
-      "any.required": "COORDINATES_ARE_REQUIRED",
-      "number.empty": "COORDINATES_MUST_NOT_BE_EMPTY",
+      "any.required": `COORDINATES_ARE_REQUIRED`,
+      "number.base": `COORDINATES_MUST_BE_NUMERIC`,
+      "number.empty": `COORDINATES_MUST_NOT_BE_EMPTY`,
     }),
     petSex: Joi.string().required().valid("M", "F", "NA").messages({
       "any.required": `SEX_REQUIRED`,
@@ -126,10 +133,10 @@ function validatePost(post) {
     petSize: Joi.string()
       .required()
       .valid(
-        "X-Small (1-5 kg)",
-        "Small (5-15 Kg)",
-        "Medium (15-25 kg)",
-        "Large (>25 Kg)"
+        `X-Small (1-5 kg)`,
+        `Small (5-15 kg)`,
+        `Medium (15-25 kg)`,
+        `Large (>25 kg)`
       )
       .messages({
         "any.required": `SIZE_REQUIRED`,
