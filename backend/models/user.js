@@ -58,6 +58,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  latitude: {
+    type: Number,
+  },
+  longtitude: {
+    type: Number,
+  },
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -83,13 +89,13 @@ const User = mongoose.model("User", userSchema);
 function validateUser(user) {
   const schema = Joi.object({
     fullname: Joi.string()
-      .regex(/[$\(\)<>0-9]/, { invert: true })
+      .regex(/[$\(\)<>]/, { invert: true })
       .min(2)
       .max(50)
       .messages({
         "string.pattern.invert.base": `FULLNAME_ILLEGAL_CHAR`,
         "any.required": `INVALID_FULLNAME`,
-        "string.empty": `FULLNAME_MUST_NOT_BE_EMPTY`,
+        "string.empty": `FULLNAME_NOT_EMPTY`,
         "string.min": `FULLNAME_MINIMUN_2_CHARS`,
         "string.max": `FULLNAME_MAXIMUM_50_CHARS`,
       }),
@@ -101,7 +107,7 @@ function validateUser(user) {
       .max(50)
       .messages({
         "string.pattern.invert.base": `EMAIL_ILLEGAL_CHAR`,
-        "string.empty": `EMAIL_MUST_NOT_BE_EMPTY`,
+        "string.empty": `EMAIL_NOT_EMPTY`,
         "string.email": `INVALID_EMAIL`,
         "any.required": `INVALID_EMAIL`,
         "any.unique": `INVALID_EMAIL`,
@@ -115,34 +121,125 @@ function validateUser(user) {
       .max(255)
       .messages({
         "string.pattern.invert.base": `ILLEGAL_CHAR_PASSWORD`,
-        "string.empty": `PASSWORD_MUST_NOT_BE_EMPTY`,
-        "any.required": `PASSWORD_REQUIRED`,
-        "string.min": `MINIMUM_6_CHARS`,
-        "string.max": `MAXIMUM_255_CHARS`,
+        "string.empty": `INVALID_PASSWORD`,
+        "any.required": `INVALID_PASSWORD`,
+        "string.min": `INVALID_PASSWORD`,
+        "string.max": `INVALID_PASSWORD`,
       }),
     postalcode: Joi.string()
+      .regex(/[$\(\)<>]/, { invert: true })
       .allow("", null)
       .default(null)
       .min(5)
       .max(6)
       .messages({
-        "any.number": `MUST_BE_NUMBER`,
-        "number.min": `MINIMUM_5_CHARS`,
-        "number.max": `MAXIMUM_5_CHARS`,
+        "any.string": `POSTALCODE_MUST_BE_NUMBER`,
+        "string.min": `POSTALCODE_MINIMUM_5_CHARS`,
+        "string.max": `POSTALCODE_MAXIMUM_5_CHARS`,
       }),
     telephone: Joi.string()
+      .regex(/[$\(\)<>A-Za-z]/, { invert: true })
       .min(10)
       .max(14)
       .default(null)
       .allow("", null)
       .messages({
-        "any.number": `MUST_BE_NUMBER`,
-        "number.min": `MINIMUM_10_CHARS`,
-        "number.max": `MAXIMUM_14_CHARS`,
+        "any.string": `TELEPHONE_MUST_BE_NUMBER`,
+        "string.min": `TELEPHONE_MINIMUM_10_CHARS`,
+        "string.max": `TELEPHONE_MAXIMUM_14_CHARS`,
       }),
+    latitude: Joi.number().allow("", null).messages({
+      "any.required": `LATITUDE_ARE_REQUIRED`,
+      "number.base": `LATITUDE_MUST_NUMERIC`,
+    }),
+    longtitude: Joi.number().allow("", null).messages({
+      "any.required": `LONGTITUDES_ARE_REQUIRED`,
+      "number.base": `LONGTITUDES_MUST_NUMERIC`,
+    }),
     isEmailVerified: Joi.boolean().default(true).messages({
-      "any.required": `REQUIRED_FIELD`,
-      "boolean.base": `NO_VERIFICATION`,
+      "any.required": `ISEMAILVERIFIED_REQUIRED_FIELD`,
+      "boolean.base": `ISEMAILVERIFIED_NO_VERIFICATION`,
+    }),
+  });
+  return schema.validate(user);
+}
+
+function validateUpdateUser(user) {
+  const schema = Joi.object({
+    fullname: Joi.string()
+      .regex(/[$\(\)<>]/, { invert: true })
+      .required()
+      .min(2)
+      .max(50)
+      .messages({
+        "string.pattern.invert.base": `FULLNAME_ILLEGAL_CHAR`,
+        "any.required": `INVALID_FULLNAME`,
+        "string.empty": `FULLNAME_NOT_EMPTY`,
+        "string.min": `FULLNAME_MINIMUN_2_CHARS`,
+        "string.max": `FULLNAME_MAXIMUM_50_CHARS`,
+      }),
+    email: Joi.string()
+      .email()
+      .regex(/[$\(\)<>]/, { invert: true })
+      .required()
+      .min(5)
+      .max(50)
+      .messages({
+        "string.pattern.invert.base": `EMAIL_ILLEGAL_CHAR`,
+        "string.empty": `EMAIL_NOT_EMPTY`,
+        "string.email": `INVALID_EMAIL`,
+        "any.required": `INVALID_EMAIL`,
+        "any.unique": `INVALID_EMAIL`,
+        "string.min": `INVALID_EMAIL`,
+        "string.max": `INVALID_EMAIL`,
+      }),
+    password: Joi.string()
+      .regex(/[$\(\)<>]/, { invert: true })
+      .required()
+      .min(6)
+      .max(255)
+      .messages({
+        "string.pattern.invert.base": `ILLEGAL_CHAR_PASSWORD`,
+        "string.empty": `INVALID_PASSWORD`,
+        "any.required": `INVALID_PASSWORD`,
+        "string.min": `INVALID_PASSWORD`,
+        "string.max": `INVALID_PASSWORD`,
+      }),
+    postalcode: Joi.string()
+      .regex(/[$\(\)<>A-Za-z]/, { invert: true })
+      .required()
+      .allow("")
+      .min(5)
+      .max(6)
+      .messages({
+        "string.pattern.invert.base": `ILLEGAL_CHAR_PASSWORD`,
+        "any.string": `POSTALCODE_MUST_BE_NUMERIC`,
+        "string.min": `POSTCALCODE_MINIMUM_5_CHARS`,
+        "string.max": `POSTALCODE_MAXIMUM_5_CHARS`,
+      }),
+    telephone: Joi.string()
+      .regex(/[$\(\)<>A-Za-z]/, { invert: true })
+      .min(10)
+      .max(14)
+      .required()
+      .allow("")
+      .messages({
+        "string.pattern.invert.base": `ILLEGAL_CHAR_PASSWORD`,
+        "any.string": `TELEPHONE_MUST_BE_NUMBER`,
+        "string.min": `TELEPHONE_MINIMUM_10_CHARS`,
+        "string.max": `TELEPHONE_MAXIMUM_14_CHARS`,
+      }),
+    latitude: Joi.number().allow("").required().messages({
+      "any.required": `LATITUDE_ARE_REQUIRED`,
+      "number.base": `LATITUDE_MUST_BE_NUMERIC`,
+    }),
+    longtitude: Joi.number().allow("").required().messages({
+      "any.required": `LONGTITUDE_ARE_REQUIRED`,
+      "number.base": `LONGITUDE_MUST_BE_NUMERIC`,
+    }),
+    isEmailVerified: Joi.boolean().default(true).messages({
+      "any.required": `ISEMAILVERIFIED_REQUIRED_FIELD`,
+      "boolean.base": `ISEMAILVERIFIED_NO_VERIFICATION`,
     }),
   });
   return schema.validate(user);
@@ -150,3 +247,4 @@ function validateUser(user) {
 
 module.exports.User = User;
 module.exports.validateUser = validateUser;
+module.exports.validateUpdateUser = validateUpdateUser;

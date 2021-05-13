@@ -21,9 +21,9 @@ function validateBreed(breed) {
       .required()
       .messages({
         "string.pattern.invert.base": `ILLEGAL_CHAR_TITLE`,
-        "string.min": `MINIMUN_2_CHARS`,
-        "string.max": `MAXIMUM_50_CHARS`,
-        "any.required": `REQUIRED_FIELD`,
+        "string.min": `NAME_MINIMUN_2_CHARS`,
+        "string.max": `NAME_MAXIMUM_50_CHARS`,
+        "any.required": `NAME_REQUIRED_FIELD`,
       }),
   });
   return schema.validate(breed);

@@ -10,7 +10,7 @@ function generateStringCode(
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * charactersLength));
   }
-  console.log(length);
+
   return `${result}`;
 }
 

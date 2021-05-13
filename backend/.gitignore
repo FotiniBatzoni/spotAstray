@@ -1,0 +1,14 @@
+# dotenv environment variables file
+.env
+.env.test
+.env*.local
+
+# End of https://www.toptal.com/developers/gitignore/api/node
+
+logfile.log
+uncaughtExceptions.log
+*.log
+
+package-lock.json
+
+node_module/

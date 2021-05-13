@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const auth = require("../middleware/auth");
 const { Post, validatePost } = require("../models/post");
 const { User } = require("../models/user");
+const passPost = require("../middleware/passPost");
+const comments = require("../routes/comments");
 
 router.post("/", [auth], async (req, res) => {
   const { error } = validatePost(req.body);
@@ -38,7 +40,7 @@ router.put("/:postId", [auth], async (req, res) => {
 
   const { error } = validatePost(req.body);
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.status(400).send({ message: error.details[0].message });
   }
 
   let post = await Post.findOne({
@@ -104,7 +106,7 @@ router.get("/user/:userId", async (req, res) => {
   let posts = await Post.find({ user: req.params.userId });
 
   if (posts.length === 0) {
-    return res.status(404).send("USER_HAS_NO_POSTS");
+    return res.status(404).send({ message: "USER_HAS_NO_POSTS" });
   }
 
   return res.send(posts);
@@ -135,5 +137,7 @@ router.delete("/:postId", [auth], async (req, res) => {
 
   return res.send(post);
 });
+
+router.use("/:post/comments", [passPost], comments);
 
 module.exports = router;

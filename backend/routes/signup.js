@@ -19,8 +19,9 @@ router.post("/", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
     postalcode: req.body.postalcode,
-    location: req.body.location,
     telephone: req.body.telephone,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
   };
 
   let user = await User.findOne({ email: req.body.email });

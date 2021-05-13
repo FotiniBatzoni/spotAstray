@@ -40,13 +40,13 @@ function validate(request) {
       .min(5)
       .max(50)
       .messages({
-        "string.pattern.invert.base": "EMAIL_ILLEGAL_CHAR",
-        "string.email": "INVALID_EMAIL",
-        "string.empty": "EMAIL_MUST_NOT_BE_EMPTY",
-        "any.required": "INVALID_EMAIL",
-        "any.unique": "INVALID_EMAIL",
-        "string.min": "INVALID_EMAIL",
-        "string.max": "INVALID_EMAIL",
+        "string.pattern.invert.base": `EMAIL_ILLEGAL_CHAR`,
+        "string.email": `INVALID_EMAIL`,
+        "string.empty": `EMAIL_MUST_NOT_BE_EMPTY`,
+        "any.required": `INVALID_EMAIL`,
+        "any.unique": `INVALID_EMAIL`,
+        "string.min": `INVALID_EMAIL`,
+        "string.max": `INVALID_EMAIL`,
       }),
     password: Joi.string()
       .regex(/[$\(\)<>]/, { invert: true })
@@ -54,11 +54,11 @@ function validate(request) {
       .min(6)
       .max(255)
       .messages({
-        "string.pattern.invert.base": "ILLEGAL_CHAR_PASSWORD",
-        "string.empty": "PASSWORD_MUST_NOT_BE_EMPTY",
-        "any.required": "PASSWORD_REQUIRED",
-        "string.min": "MINIMUM_6_CHARS",
-        "string.max": "MAXIMUM_255_CHARS",
+        "string.pattern.invert.base": `ILLEGAL_CHAR_PASSWORD`,
+        "string.empty": `INVALID_PASSWORD`,
+        "any.required": `INVALID_PASSWORD`,
+        "string.min": `INVALID_PASSWORD`,
+        "string.max": `INVALID_PASSWORD`,
       }),
   });
 

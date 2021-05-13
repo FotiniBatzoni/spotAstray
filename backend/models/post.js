@@ -19,6 +19,15 @@ const breedSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const actionSchema = new mongoose.Schema(
+  {
+    action: {
+      type: String,
+    },
+  },
+  { _id: false }
+);
+
 const postSchema = new mongoose.Schema(
   {
     content: {
@@ -73,6 +82,7 @@ const postSchema = new mongoose.Schema(
       default: true,
     },
     postType: postTypeSchema,
+    action: actionSchema,
     breed: breedSchema,
     comments: [
       {
@@ -102,19 +112,19 @@ function validatePost(post) {
       //.required()
       .allow("", null)
       .messages({
-        "string.pattern.invert.base": `CONTENT_ILLEGAL_CHAR`,
+        "string.pattern.invert.base": `IMAGE_ILLEGAL_CHAR`,
         //"any.required": `IMAGE_IS_REQUIRED`,
-        "string.empty": `CONTENT_MUST_NOT_BE_EMPTY`,
+        "string.empty": `IMAGE_MUST_NOT_BE_EMPTY`,
       }),
     latitude: Joi.number().required().messages({
-      "any.required": `COORDINATES_ARE_REQUIRED`,
-      "number.base": `COORDINATES_MUST_BE_NUMERIC`,
-      "number.empty": `COORDINATES_MUST_NOT_BE_EMPTY`,
+      "any.required": `LATITUDE_ARE_REQUIRED`,
+      "number.base": `LATITUDE_MUST_BE_NUMERIC`,
+      "number.empty": `LATITUDE_MUST_NOT_BE_EMPTY`,
     }),
     longtitude: Joi.number().required().messages({
-      "any.required": `COORDINATES_ARE_REQUIRED`,
-      "number.base": `COORDINATES_MUST_BE_NUMERIC`,
-      "number.empty": `COORDINATES_MUST_NOT_BE_EMPTY`,
+      "any.required": `LONGTITUDE_ARE_REQUIRED`,
+      "number.base": `LONGTITUDE_MUST_BE_NUMERIC`,
+      "number.empty": `LONGITUDE_MUST_NOT_BE_EMPTY`,
     }),
     petSex: Joi.string().required().valid("M", "F", "NA").messages({
       "any.required": `SEX_REQUIRED`,
