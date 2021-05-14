@@ -2,14 +2,12 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const { User, validateUser } = require("../models/user");
-const { Role } = require("../models/role");
-const { verificationEmail } = require("../utilities/mailMessages");
 const email = require("../utilities/mail");
 const generateStringCode = require("../utilities/generateStringCode");
 
 router.post("/", async (req, res) => {
+  console.log(req.body);
   const { error } = validateUser(req.body);
-  //console.log(error);
   if (error) {
     return res.status(400).send({ message: error.details[0].message });
   }
@@ -21,7 +19,8 @@ router.post("/", async (req, res) => {
     postalcode: req.body.postalcode,
     telephone: req.body.telephone,
     latitude: req.body.latitude,
-    longitude: req.body.longitude,
+    longtitude: req.body.longtitude,
+    fcmToken: req.body.fcmToken,
   };
 
   let user = await User.findOne({ email: req.body.email });

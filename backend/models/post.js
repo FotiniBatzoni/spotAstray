@@ -41,13 +41,8 @@ const postSchema = new mongoose.Schema(
         //required: true,
       },
     ],
-    latitude: {
-      type: Number,
-      required: true,
-    },
-    longtitude: {
-      type: Number,
-      required: true,
+    address: {
+      type: String,
     },
     petSex: {
       type: String,
@@ -116,16 +111,13 @@ function validatePost(post) {
         //"any.required": `IMAGE_IS_REQUIRED`,
         "string.empty": `IMAGE_MUST_NOT_BE_EMPTY`,
       }),
-    latitude: Joi.number().required().messages({
-      "any.required": `LATITUDE_ARE_REQUIRED`,
-      "number.base": `LATITUDE_MUST_BE_NUMERIC`,
-      "number.empty": `LATITUDE_MUST_NOT_BE_EMPTY`,
-    }),
-    longtitude: Joi.number().required().messages({
-      "any.required": `LONGTITUDE_ARE_REQUIRED`,
-      "number.base": `LONGTITUDE_MUST_BE_NUMERIC`,
-      "number.empty": `LONGITUDE_MUST_NOT_BE_EMPTY`,
-    }),
+
+    address: Joi.string()
+      .regex(/[$\(\)<>]/, { invert: true })
+      .allow("", null)
+      .messages({
+        "string.pattern.invert.base": "CONTENT_ILLEGAL_CHAR",
+      }),
     petSex: Joi.string().required().valid("M", "F", "NA").messages({
       "any.required": `SEX_REQUIRED`,
       "any.only": `INVALID_SEX`,

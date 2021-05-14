@@ -4,6 +4,7 @@ const Joi = require("joi");
 const bcrypt = require("bcrypt");
 require("dotenv").config(); //
 const { User } = require("../models/user");
+const { valid } = require("joi");
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
@@ -12,6 +13,7 @@ router.post("/", async (req, res) => {
   }
 
   let user = await User.findOne({ email: req.body.email });
+
   if (!user) {
     return res.status(400).send({ message: "WRONG_INPUTS" });
   }

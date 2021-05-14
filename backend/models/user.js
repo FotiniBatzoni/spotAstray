@@ -64,6 +64,9 @@ const userSchema = new mongoose.Schema({
   longtitude: {
     type: Number,
   },
+  fcmToken: {
+    type: String,
+  },
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -94,7 +97,7 @@ function validateUser(user) {
       .max(50)
       .messages({
         "string.pattern.invert.base": `FULLNAME_ILLEGAL_CHAR`,
-        "any.required": `INVALID_FULLNAME`,
+        "any.required": `FULLNAME_IS_REQUIRED`,
         "string.empty": `FULLNAME_NOT_EMPTY`,
         "string.min": `FULLNAME_MINIMUN_2_CHARS`,
         "string.max": `FULLNAME_MAXIMUM_50_CHARS`,
@@ -156,6 +159,13 @@ function validateUser(user) {
       "any.required": `LONGTITUDES_ARE_REQUIRED`,
       "number.base": `LONGTITUDES_MUST_NUMERIC`,
     }),
+    fcmToken: Joi.string()
+      .regex(/[$\(\)<>]/, { invert: true })
+      .required()
+      .allow("")
+      .messages({
+        "string.pattern.invert.base": `FCMTOKEN_ILLEGAL_CHAR`,
+      }),
     isEmailVerified: Joi.boolean().default(true).messages({
       "any.required": `ISEMAILVERIFIED_REQUIRED_FIELD`,
       "boolean.base": `ISEMAILVERIFIED_NO_VERIFICATION`,

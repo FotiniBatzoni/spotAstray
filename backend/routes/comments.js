@@ -59,16 +59,67 @@ router.put("/:commentId", [auth], async (req, res) => {
 
 //Get all comments by postId
 router.get("/", async (req, res) => {
-  if (!mongoose.isValidObjectId(req.params.postId)) {
-    return res.status(400).send({ message: error.details[0].message });
+  let comment = await Comment.find({ post: req.postId });
+  if (!comment) {
+    return res.status(404).send({ message: "COMMENT_NOT_FOUND" });
   }
 
-  let post = await Post.findOne({ _id: req.params.postId });
-  if (!post) {
-    return res.status(404).send({ message: "POST_NOT_FOUND" });
+  comment = await Comment.findAndPopulate({ post: req.postId });
+  return res.send(comment);
+});
+
+//Get comment by commentId
+router.get("/:commentId", async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.commentId)) {
+    return res.status(400).send({ message: "COMMENT_NOT_FOUND" });
   }
 
-  return res.send(post);
+  let comment = await Comment.findOne({ _id: req.params.commentId });
+  if (!comment) {
+    return res.status(404).send({ message: "COMMENT_NOT_FOUND" });
+  }
+
+  comment = await Comment.findAndPopulate({ post: req.postId }, true);
+
+  return res.send(comment);
+});
+
+//Get all comments by userId
+router.get("/user/:userId", async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.userId)) {
+    return res.status(400).send({ message: "USER_NOT_FOUND" });
+  }
+
+  let comment = await Comment.findAndPopulate({ user: req.params.userId });
+  if (comment.length === 0) {
+    return res.status(404).send({ message: "COMMENT_NOT_FOUND" });
+  }
+
+  return res.send(comment);
+});
+
+//soft delete comment by commentId
+router.delete("/:commentId", [auth], async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.commentId)) {
+    return res.status(400).send({ message: "COMMENT_NOT_FOUND" });
+  }
+
+  let comment = await Comment.findOne({ _id: req.params.commentId });
+  if (!comment) {
+    return res.status(404).send({ message: "COMMENT_NOT_FOUND" });
+  }
+
+  if (comment.isActive) {
+    comment = await Comment.findOneAndUpdate(
+      { _id: req.params.commentId },
+      { isActive: false },
+      { new: true }
+    );
+  } else {
+    return res.send({ message: "COMMENT_ALREADY_DELETED", comment });
+  }
+
+  return res.send({ message: "COMMENT_DELETED", comment });
 });
 
 module.exports = router;

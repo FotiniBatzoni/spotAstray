@@ -7,7 +7,7 @@ const { User } = require("../models/user");
 const passPost = require("../middleware/passPost");
 const comments = require("../routes/comments");
 
-router.post("/", [auth], async (req, res) => {
+router.post("/prefill", [auth], async (req, res) => {
   const { error } = validatePost(req.body);
   //console.log(error);
   if (error) {
@@ -17,8 +17,7 @@ router.post("/", [auth], async (req, res) => {
   const input = {
     content: req.body.content,
     image: req.body.image,
-    latitude: req.body.latitude,
-    longtitude: req.body.longtitude,
+    address: req.body.address,
     petSex: req.body.petSex,
     petColor: req.body.petColor,
     petSize: req.body.petSize,
@@ -57,8 +56,7 @@ router.put("/:postId", [auth], async (req, res) => {
     {
       content: req.body.content,
       image: req.body.image,
-      latitude: req.body.latitude,
-      longtitude: req.body.longtitude,
+      address: req.body.address,
       petSex: req.body.petSex,
       petColor: req.body.petColor,
       petSize: req.body.petSize,

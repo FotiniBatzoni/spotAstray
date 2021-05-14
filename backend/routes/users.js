@@ -13,7 +13,14 @@ router.get("/me", [auth], async (req, res) => {
 
   const userDetails = await await await User.findOne(
     { _id: req.user._id },
-    { fullname: 1, email: 1, postalcode: 1, telephone: 1 }
+    {
+      fullname: 1,
+      email: 1,
+      postalcode: 1,
+      telephone: 1,
+      latitude: 1,
+      longtitude: 1,
+    }
   );
 
   return res.send(userDetails);
@@ -37,7 +44,7 @@ router.put("/", [auth], async (req, res) => {
 
   let user = await await User.findOneAndUpdate(req.user._id, input, {
     new: true,
-  }).select("-posts");
+  }).select("-posts -password -hash");
 
   return res.send(user);
 });
